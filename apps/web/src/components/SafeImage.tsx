@@ -61,12 +61,12 @@ export const SafeImage = ({ className, src, alt, fallbackType = "mountain", ...p
           {...props}
           src={currentSrc}
           alt={alt}
-          onLoadingComplete={() => setLoading(false)}
+          onLoad={() => setLoading(false)}
           onError={handleImageError}
           className={cn(
             "transition-all duration-700",
             loading ? "opacity-0 scale-110" : "opacity-100 scale-100",
-            props.className
+            className
           )}
         />
       )}
