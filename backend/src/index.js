@@ -21,4 +21,11 @@ app.use('/api/leaderboard', require('./routes/leaderboard'))
 app.use('/api/nfts', require('./routes/nfts'))
 app.use('/api/actions', require('./routes/actions'))
 
-app.listen(3001, () => console.log('Backend running on port 3001'))
+// Start server for local development only
+// Vercel serverless requires module.exports = app
+if (require.main === module) {
+  const PORT = process.env.PORT || 3001
+  app.listen(PORT, () => console.log(`Backend running on port ${PORT}`))
+}
+
+module.exports = app
