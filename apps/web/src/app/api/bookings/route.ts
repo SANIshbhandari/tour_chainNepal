@@ -153,7 +153,7 @@ export async function GET() {
     return jsonError(500, "db_error", error.message);
   }
 
-  const rows = (data ?? []) as Array<BookingRowUsd | BookingRowAlt | BookingRowSol>;
+  const rows = (data ?? []) as unknown as Array<BookingRowUsd | BookingRowAlt | BookingRowSol>;
   const bookings = rows.map((row) => ({
     id: row.id,
     status: row.status,
