@@ -1,0 +1,29 @@
+    Finished `release` profile [optimized] target(s) in 9.50s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.31s
+     Running unittests src/lib.rs (/mnt/c/Users/Sanish/OneDrive/Desktop/tourchain/Tour_chain/target/debug/deps/tourchain_escrow-eb91285029319927)
+   Compiling tourchain_proof v0.1.0 (/mnt/c/Users/Sanish/OneDrive/Desktop/tourchain/Tour_chain/programs/tourchain_proof)
+    Finished `release` profile [optimized] target(s) in 12.59s
+   Compiling anchor-syn v0.29.0
+   Compiling anchor-derive-space v0.29.0
+   Compiling base64 v0.13.1
+   Compiling spl-concurrent-merkle-tree v0.4.1
+   Compiling spl-noop v0.2.0
+   Compiling kaigan v0.5.0
+   Compiling num-derive v0.3.3
+   Compiling mpl-bubblegum v1.4.0
+   Compiling anchor-derive-accounts v0.29.0
+   Compiling anchor-attribute-event v0.29.0
+   Compiling anchor-attribute-program v0.29.0
+   Compiling anchor-attribute-constant v0.29.0
+   Compiling anchor-attribute-account v0.29.0
+   Compiling anchor-derive-serde v0.29.0
+   Compiling anchor-attribute-access-control v0.29.0
+   Compiling anchor-attribute-error v0.29.0
+   Compiling anchor-lang v0.29.0
+   Compiling spl-account-compression v0.4.2
+   Compiling tourchain_proof v0.1.0 (/mnt/c/Users/Sanish/OneDrive/Desktop/tourchain/Tour_chain/programs/tourchain_proof)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 53.64s
+     Running unittests src/lib.rs (/mnt/c/Users/Sanish/OneDrive/Desktop/tourchain/Tour_chain/target/debug/deps/tourchain_proof-c762895cc22a5245)
+    Finished `release` profile [optimized] target(s) in 7.78s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.57s
+     Running unittests src/lib.rs (/mnt/c/Users/Sanish/OneDrive/Desktop/tourchain/Tour_chain/target/debug/deps/tourchain_reputation-b276ce628274d958)

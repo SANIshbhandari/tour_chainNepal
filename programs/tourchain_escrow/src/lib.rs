@@ -1,8 +1,6 @@
 use anchor_lang::prelude::*;
-use anchor_lang::system_program::{self, Transfer};
-use anchor_lang::solana_program::{program::invoke_signed, system_instruction};
 
-declare_id!("11111111111111111111111111111111");
+declare_id!("EsmThaTZhHLviAJFbpgaSTr6eCgUFGcSiboMRzb9JF6Z");
 
 #[program]
 pub mod tourchain_escrow {
@@ -31,35 +29,14 @@ pub mod tourchain_escrow {
             .ok_or(EscrowError::Overflow)?;
         escrow.bump = ctx.bumps.escrow;
 
-        if ctx.accounts.vault.lamports() == 0 {
-            let vault_bump = ctx.bumps.vault;
-            let escrow_key = escrow.key();
-            let vault_seeds: &[&[u8]] = &[b"vault", escrow_key.as_ref(), &[vault_bump]];
-            invoke_signed(
-                &system_instruction::create_account(
-                    &ctx.accounts.tourist.key(),
-                    &ctx.accounts.vault.key(),
-                    0,
-                    0,
-                    &system_program::ID,
-                ),
-                &[
-                    ctx.accounts.tourist.to_account_info(),
-                    ctx.accounts.vault.to_account_info(),
-                    ctx.accounts.system_program.to_account_info(),
-                ],
-                &[vault_seeds],
-            )?;
-        }
-
-        let transfer_ctx = CpiContext::new(
-            ctx.accounts.system_program.key(),
-            Transfer {
+        let cpi_ctx = CpiContext::new(
+            ctx.accounts.system_program.to_account_info(),
+            anchor_lang::system_program::Transfer {
                 from: ctx.accounts.tourist.to_account_info(),
                 to: ctx.accounts.vault.to_account_info(),
             },
         );
-        system_program::transfer(transfer_ctx, amount)?;
+        anchor_lang::system_program::transfer(cpi_ctx, amount)?;
 
         emit!(EscrowCreated {
             escrow: escrow.key(),
@@ -348,15 +325,17 @@ pub struct OpenDispute<'info> {
 pub struct ResolveDispute<'info> {
     #[account(mut)]
     pub escrow: Account<'info, BookingEscrow>,
-    /// CHECK: seed checked PDA holding lamports.
+    /// CHECK: seed-checked PDA vault holding lamports.
     #[account(
         mut,
         seeds = [b"vault", escrow.key().as_ref()],
         bump
     )]
     pub vault: UncheckedAccount<'info>,
+    /// CHECK: tourist wallet; key verified against escrow.tourist via require_keys_eq!.
     #[account(mut)]
     pub tourist: UncheckedAccount<'info>,
+    /// CHECK: guide wallet; key verified against escrow.guide via require_keys_eq!.
     #[account(mut)]
     pub guide: UncheckedAccount<'info>,
     pub admin: Signer<'info>,

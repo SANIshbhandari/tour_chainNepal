@@ -1,0 +1,733 @@
+{
+  "address": "EsmThaTZhHLviAJFbpgaSTr6eCgUFGcSiboMRzb9JF6Z",
+  "metadata": {
+    "name": "tourchain_escrow",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "activate",
+      "discriminator": [
+        194,
+        203,
+        35,
+        100,
+        151,
+        55,
+        170,
+        82
+      ],
+      "accounts": [
+        {
+          "name": "escrow",
+          "writable": true
+        },
+        {
+          "name": "guide",
+          "signer": true,
+          "relations": [
+            "escrow"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "cancel_booking",
+      "discriminator": [
+        139,
+        162,
+        116,
+        202,
+        78,
+        140,
+        139,
+        90
+      ],
+      "accounts": [
+        {
+          "name": "escrow",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "escrow"
+              }
+            ]
+          }
+        },
+        {
+          "name": "tourist",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "escrow"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "complete_booking",
+      "discriminator": [
+        82,
+        206,
+        187,
+        2,
+        194,
+        8,
+        11,
+        229
+      ],
+      "accounts": [
+        {
+          "name": "escrow",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "escrow"
+              }
+            ]
+          }
+        },
+        {
+          "name": "tourist",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "escrow"
+          ]
+        },
+        {
+          "name": "guide",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "escrow"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_escrow",
+      "discriminator": [
+        253,
+        215,
+        165,
+        116,
+        36,
+        108,
+        68,
+        80
+      ],
+      "accounts": [
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tourist"
+              },
+              {
+                "kind": "account",
+                "path": "guide"
+              },
+              {
+                "kind": "arg",
+                "path": "created_at"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "escrow"
+              }
+            ]
+          }
+        },
+        {
+          "name": "guide"
+        },
+        {
+          "name": "admin"
+        },
+        {
+          "name": "tourist",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "milestones",
+          "type": "u8"
+        },
+        {
+          "name": "created_at",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "open_dispute",
+      "discriminator": [
+        137,
+        25,
+        99,
+        119,
+        23,
+        223,
+        161,
+        42
+      ],
+      "accounts": [
+        {
+          "name": "escrow",
+          "writable": true
+        },
+        {
+          "name": "actor",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "release_milestone",
+      "discriminator": [
+        56,
+        2,
+        199,
+        164,
+        184,
+        108,
+        167,
+        222
+      ],
+      "accounts": [
+        {
+          "name": "escrow",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "escrow"
+              }
+            ]
+          }
+        },
+        {
+          "name": "tourist",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "escrow"
+          ]
+        },
+        {
+          "name": "guide",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "escrow"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "resolve_dispute",
+      "discriminator": [
+        231,
+        6,
+        202,
+        6,
+        96,
+        103,
+        12,
+        230
+      ],
+      "accounts": [
+        {
+          "name": "escrow",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "escrow"
+              }
+            ]
+          }
+        },
+        {
+          "name": "tourist",
+          "writable": true
+        },
+        {
+          "name": "guide",
+          "writable": true
+        },
+        {
+          "name": "admin",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "tourist_refund_bps",
+          "type": "u16"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "BookingEscrow",
+      "discriminator": [
+        229,
+        229,
+        38,
+        29,
+        92,
+        48,
+        93,
+        60
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "BookingCancelled",
+      "discriminator": [
+        110,
+        78,
+        189,
+        66,
+        49,
+        189,
+        33,
+        196
+      ]
+    },
+    {
+      "name": "BookingCompleted",
+      "discriminator": [
+        7,
+        64,
+        149,
+        239,
+        127,
+        8,
+        49,
+        16
+      ]
+    },
+    {
+      "name": "DisputeOpened",
+      "discriminator": [
+        239,
+        222,
+        102,
+        235,
+        193,
+        85,
+        1,
+        214
+      ]
+    },
+    {
+      "name": "DisputeResolved",
+      "discriminator": [
+        121,
+        64,
+        249,
+        153,
+        139,
+        128,
+        236,
+        187
+      ]
+    },
+    {
+      "name": "EscrowActivated",
+      "discriminator": [
+        114,
+        63,
+        0,
+        102,
+        205,
+        62,
+        130,
+        207
+      ]
+    },
+    {
+      "name": "EscrowCreated",
+      "discriminator": [
+        70,
+        127,
+        105,
+        102,
+        92,
+        97,
+        7,
+        173
+      ]
+    },
+    {
+      "name": "MilestoneReleased",
+      "discriminator": [
+        49,
+        225,
+        91,
+        223,
+        34,
+        165,
+        109,
+        181
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidStatus",
+      "msg": "Invalid status"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidMilestones",
+      "msg": "Invalid milestones"
+    },
+    {
+      "code": 6002,
+      "name": "Overflow",
+      "msg": "Arithmetic overflow"
+    },
+    {
+      "code": 6003,
+      "name": "UnauthorizedAdmin",
+      "msg": "Unauthorized admin"
+    },
+    {
+      "code": 6004,
+      "name": "DisputeBpsOutOfRange",
+      "msg": "Dispute bps out of range"
+    },
+    {
+      "code": 6005,
+      "name": "InsufficientVault",
+      "msg": "Insufficient vault balance"
+    },
+    {
+      "code": 6006,
+      "name": "UnauthorizedParticipant",
+      "msg": "Unauthorized participant"
+    }
+  ],
+  "types": [
+    {
+      "name": "BookingCancelled",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BookingCompleted",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BookingEscrow",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tourist",
+            "type": "pubkey"
+          },
+          {
+            "name": "guide",
+            "type": "pubkey"
+          },
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "released",
+            "type": "u64"
+          },
+          {
+            "name": "milestones",
+            "type": "u8"
+          },
+          {
+            "name": "milestones_completed",
+            "type": "u8"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "BookingStatus"
+              }
+            }
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "dispute_deadline",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BookingStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Funded"
+          },
+          {
+            "name": "Active"
+          },
+          {
+            "name": "Completed"
+          },
+          {
+            "name": "Disputed"
+          },
+          {
+            "name": "Refunded"
+          },
+          {
+            "name": "Cancelled"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DisputeOpened",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DisputeResolved",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          },
+          {
+            "name": "tourist_amount",
+            "type": "u64"
+          },
+          {
+            "name": "guide_amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EscrowActivated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EscrowCreated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          },
+          {
+            "name": "tourist",
+            "type": "pubkey"
+          },
+          {
+            "name": "guide",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MilestoneReleased",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "milestones_completed",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

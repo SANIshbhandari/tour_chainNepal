@@ -1,14 +1,19 @@
 [toolchain]
-package_manager = "yarn"
+anchor_version = "0.30.1"
 
 [features]
 resolution = true
 skip-lint = false
 
 [programs.localnet]
-tourchain_reputation = "2GWdm3guUBQBLdA3VB9ECAwzN6UdpEMgs2VrKHiKfBXy"
-tourchain_escrow = "11111111111111111111111111111111"
-tourchain_proof = "11111111111111111111111111111111"
+tourchain_reputation = "EDPXuESJcC2NqypbegAEdxAXVUegQpZ7wrd2Ex4AbdL6"
+tourchain_escrow = "EsmThaTZhHLviAJFbpgaSTr6eCgUFGcSiboMRzb9JF6Z"
+tourchain_proof = "3PfgspqxmvAh3FXUMGRPexBV7neXwLkKTPnv3gRWvPjm"
+
+[programs.devnet]
+tourchain_reputation = "EDPXuESJcC2NqypbegAEdxAXVUegQpZ7wrd2Ex4AbdL6"
+tourchain_escrow = "EsmThaTZhHLviAJFbpgaSTr6eCgUFGcSiboMRzb9JF6Z"
+tourchain_proof = "3PfgspqxmvAh3FXUMGRPexBV7neXwLkKTPnv3gRWvPjm"
 
 [provider]
 cluster = "devnet"

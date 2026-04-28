@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
-import { SolanaProvider } from "@/components/SolanaProvider";
-import { Navbar } from "@/components/Navbar";
-import { AuthProvider } from "@/components/AuthProvider";
+import { ClientLayout } from "@/components/ClientLayout";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -16,8 +14,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Tourism Chain Nepal | Solana-Powered Ecosystem",
-  description: "Tokenized tourism rails protocol for the Himalayan experience.",
+  title: "Tour Chain Nepal | Solana-Powered Tourism",
+  description: "Trustless bookings, verifiable experiences, and on-chain reputation for Nepal's tourism ecosystem.",
 };
 
 export default function RootLayout({
@@ -28,14 +26,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${dmSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-dm-sans bg-summit-white">
-        <SolanaProvider>
-          <AuthProvider>
-            <Navbar />
-            <div className="flex-1">
-              {children}
-            </div>
-          </AuthProvider>
-        </SolanaProvider>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );

@@ -8,7 +8,13 @@
     "start": "next start",
     "lint": "eslint",
     "copy:idl": "npx tsx ../../scripts/copy-idl.ts",
-    "e2e:seed": "npx tsx scripts/e2e-seed.ts"
+    "e2e:seed": "npx tsx scripts/e2e-seed.ts",
+    "seed:nepal": "npx tsx scripts/seed-nepal-data.ts",
+    "cleanup:duplicates": "npx tsx scripts/cleanup-duplicates.ts",
+    "setup:auth": "npx tsx scripts/setup-auth-trigger.ts",
+    "add:services": "npx tsx scripts/add-missing-services.ts",
+    "add:checkpoints": "npx tsx scripts/add-checkpoints.ts",
+    "test:checkin": "npx tsx scripts/test-checkin.ts"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",

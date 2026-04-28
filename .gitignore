@@ -6,16 +6,22 @@
 
 # Environment / Secrets
 **/.env
-**/.env.*
+**/.env.local
+**/.env.*.local
 **/id.json
 **/*.key
 **/*.pem
+**/*.keypair.json
 
 # Solana / Anchor
 **/target
 **/*.so
 **/.anchor
 **/deploy/*.json
+
+# Next.js
+**/.next
+**/out
 
 # IDE / System
 **/.vscode

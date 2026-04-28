@@ -1,6 +1,18 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  Sparkles, 
+  Share2, 
+  ExternalLink, 
+  CheckCircle2,
+  Clock,
+  Map,
+  Award,
+  Link as LinkIcon,
+  Zap
+} from "lucide-react";
 
 type Proof = {
   id: string;
@@ -28,13 +40,6 @@ const COLORS = [
 
 function ProofCard({ proof, index }: { proof: Proof; index: number }) {
   const [flipped, setFlipped] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), index * 120);
-    return () => clearTimeout(timer);
-  }, [index]);
 
   const short = (s: string | null) => (s ? s.slice(0, 6) + "…" + s.slice(-4) : "pending");
   const emoji = EMOJIS[index % EMOJIS.length];
@@ -42,88 +47,132 @@ function ProofCard({ proof, index }: { proof: Proof; index: number }) {
   const date = new Date(proof.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
   return (
-    <div
-      ref={ref}
-      className="cursor-pointer"
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(32px)",
-        transition: "opacity 0.5s ease, transform 0.5s ease",
-        perspective: "1000px",
+    <motion.div
+      initial={{ opacity: 0, y: 50, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ 
+        duration: 0.5, 
+        delay: index * 0.1,
+        type: "spring",
+        stiffness: 100
       }}
-      onClick={() => setFlipped((f) => !f)}
+      whileHover={{ y: -8, transition: { duration: 0.2 } }}
+      className="cursor-pointer"
+      style={{ perspective: "1000px" }}
+      onClick={() => setFlipped(!flipped)}
     >
-      <div
+      <motion.div
+        animate={{ rotateY: flipped ? 180 : 0 }}
+        transition={{ duration: 0.6, type: "spring", stiffness: 80 }}
         style={{
-          position: "relative",
           transformStyle: "preserve-3d",
-          transition: "transform 0.6s cubic-bezier(0.4,0,0.2,1)",
-          transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-          height: "220px",
+          height: "240px",
         }}
       >
         {/* Front */}
-        <div
-          className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} p-5 flex flex-col justify-between shadow-xl`}
+        <motion.div
+          className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${gradient} p-6 flex flex-col justify-between shadow-2xl`}
           style={{ backfaceVisibility: "hidden" }}
+          whileHover={{ boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)" }}
         >
           <div className="flex justify-between items-start">
-            <span className="text-4xl">{emoji}</span>
-            <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm">
+            <motion.span 
+              className="text-5xl"
+              animate={{ rotate: [0, -10, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+            >
+              {emoji}
+            </motion.span>
+            <motion.span 
+              className="bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm flex items-center gap-1"
+              whileHover={{ scale: 1.05 }}
+            >
+              <Sparkles className="w-3 h-3" />
               NFT Proof
-            </span>
+            </motion.span>
           </div>
           <div>
-            <p className="text-white/70 text-xs uppercase tracking-widest mb-1">{date}</p>
-            <h3 className="text-white text-xl font-bold leading-tight">{proof.route?.name ?? "Journey Proof"}</h3>
-            <p className="text-white/60 text-xs mt-2">Tap to reveal on-chain details →</p>
+            <p className="text-white/70 text-xs uppercase tracking-widest mb-2 flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              {date}
+            </p>
+            <h3 className="text-white text-xl font-bold leading-tight mb-2">
+              {proof.route?.name ?? "Journey Proof"}
+            </h3>
+            <motion.p 
+              className="text-white/60 text-xs flex items-center gap-1"
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
+            >
+              Tap to reveal details →
+            </motion.p>
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-1.5">
             {[...Array(5)].map((_, i) => (
-              <span key={i} className="w-2 h-2 rounded-full bg-white/40" />
+              <motion.span
+                key={i}
+                className="w-2 h-2 rounded-full bg-white/40"
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 1, delay: i * 0.1, repeat: Infinity, repeatDelay: 3 }}
+              />
             ))}
           </div>
-        </div>
+        </motion.div>
+
         {/* Back */}
-        <div
-          className="absolute inset-0 rounded-2xl bg-gray-900 p-5 flex flex-col justify-between shadow-xl border border-white/10"
+        <motion.div
+          className="absolute inset-0 rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 p-6 flex flex-col justify-between shadow-2xl border border-white/10"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <div>
-            <p className="text-xs text-emerald-400 font-bold uppercase tracking-widest mb-3">On-Chain Data</p>
-            <div className="space-y-2">
-              <div className="bg-white/5 rounded-lg p-2">
-                <p className="text-white/40 text-xs">Mint Address</p>
+            <p className="text-xs text-emerald-400 font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+              <Zap className="w-4 h-4" />
+              On-Chain Data
+            </p>
+            <div className="space-y-3">
+              <motion.div 
+                className="bg-white/5 rounded-xl p-3 border border-white/10"
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+              >
+                <p className="text-white/40 text-xs mb-1">Mint Address</p>
                 <p className="text-white font-mono text-sm">{short(proof.nft_mint_address)}</p>
-              </div>
-              <div className="bg-white/5 rounded-lg p-2">
-                <p className="text-white/40 text-xs">Metadata URI</p>
+              </motion.div>
+              <motion.div 
+                className="bg-white/5 rounded-xl p-3 border border-white/10"
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+              >
+                <p className="text-white/40 text-xs mb-1">Metadata URI</p>
                 <p className="text-white font-mono text-sm truncate">{short(proof.metadata_uri)}</p>
-              </div>
+              </motion.div>
             </div>
           </div>
           <div className="flex gap-2">
             {proof.nft_mint_address && (
-              <a
+              <motion.a
                 href={`https://explorer.solana.com/address/${proof.nft_mint_address}?cluster=devnet`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold py-2 rounded-lg text-center transition-colors"
+                className="flex-1 bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold py-2.5 rounded-xl text-center transition-colors flex items-center justify-center gap-1"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                View on Explorer ↗
-              </a>
+                <ExternalLink className="w-3 h-3" />
+                View Explorer
+              </motion.a>
             )}
-            <button
+            <motion.button
               onClick={(e) => { e.stopPropagation(); setFlipped(false); }}
-              className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold py-2 px-3 rounded-lg transition-colors"
+              className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              ↩ Flip Back
-            </button>
+              ↩
+            </motion.button>
           </div>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -143,12 +192,40 @@ function StatBadge({ value, label, icon }: { value: string | number; label: stri
     return () => clearInterval(t);
   }, [target, value]);
 
+  const IconComponent = 
+    label.includes("Journeys") ? Map :
+    label.includes("Minted") ? Award :
+    label.includes("Pending") ? Clock :
+    LinkIcon;
+
   return (
-    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 text-center">
-      <div className="text-3xl mb-1">{icon}</div>
-      <div className="text-2xl font-bold text-white">{typeof value === "number" ? count : value}</div>
-      <div className="text-white/60 text-xs uppercase tracking-wider">{label}</div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, type: "spring" }}
+      whileHover={{ scale: 1.05, y: -5 }}
+      className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 text-center relative overflow-hidden group"
+    >
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+        initial={false}
+      />
+      <motion.div
+        animate={{ rotate: [0, 10, -10, 0] }}
+        transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+      >
+        <IconComponent className="w-10 h-10 mx-auto mb-3 text-white/80" />
+      </motion.div>
+      <motion.div 
+        className="text-3xl font-bold text-white mb-1"
+        key={count}
+        initial={{ scale: 1.2, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+      >
+        {typeof value === "number" ? count : value}
+      </motion.div>
+      <div className="text-white/60 text-xs uppercase tracking-wider font-semibold">{label}</div>
+    </motion.div>
   );
 }
 
@@ -189,92 +266,216 @@ export default function VibePage() {
   };
 
   return (
-    <main className="min-h-screen" style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f2027 100%)" }}>
+    <main className="min-h-screen relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f2027 100%)" }}>
       {/* Animated background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20" style={{ background: "radial-gradient(circle, #3b82f6, transparent)", animation: "pulse 4s ease-in-out infinite" }} />
-        <div className="absolute bottom-32 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-20" style={{ background: "radial-gradient(circle, #8b5cf6, transparent)", animation: "pulse 6s ease-in-out infinite 2s" }} />
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full blur-3xl opacity-10" style={{ background: "radial-gradient(circle, #10b981, transparent)", animation: "pulse 5s ease-in-out infinite 1s" }} />
+        <motion.div 
+          className="absolute top-20 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20" 
+          style={{ background: "radial-gradient(circle, #3b82f6, transparent)" }}
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [0, 50, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="absolute bottom-32 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-20" 
+          style={{ background: "radial-gradient(circle, #8b5cf6, transparent)" }}
+          animate={{
+            scale: [1, 1.3, 1],
+            x: [0, -40, 0],
+            y: [0, -50, 0],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+        <motion.div 
+          className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full blur-3xl opacity-10" 
+          style={{ background: "radial-gradient(circle, #10b981, transparent)" }}
+          animate={{
+            scale: [1, 1.4, 1],
+            rotate: [0, 180, 360],
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+        />
       </div>
 
       <div className="relative z-10 pt-28 pb-16 px-4 max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm text-white/70 mb-6">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            Live on Solana Devnet
-          </div>
-          <h1 className="text-6xl font-bold text-white mb-4" style={{ fontFamily: "Georgia, serif", textShadow: "0 0 40px rgba(59,130,246,0.5)" }}>
-            🏔️ Himalayan Vibe
-          </h1>
-          <p className="text-white/60 text-lg max-w-xl mx-auto">
-            Your verified journey proofs, minted as NFTs on-chain. Each card holds immutable proof of your Himalayan adventure.
-          </p>
-          <button
-            onClick={handleShare}
-            className="mt-6 inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-medium px-5 py-2.5 rounded-full transition-all"
+        <motion.div 
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, type: "spring" }}
+        >
+          <motion.div 
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2.5 text-sm text-white/70 mb-6"
+            animate={{ boxShadow: ["0 0 0 0 rgba(16, 185, 129, 0)", "0 0 0 10px rgba(16, 185, 129, 0)"] }}
+            transition={{ duration: 2, repeat: Infinity }}
           >
-            {copied ? "✅ Link Copied!" : "🔗 Share My Vibes"}
-          </button>
-        </div>
+            <motion.span 
+              className="w-2 h-2 rounded-full bg-emerald-400"
+              animate={{ scale: [1, 1.5, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            />
+            Live on Solana Devnet
+          </motion.div>
+          
+          <motion.h1 
+            className="text-6xl md:text-7xl font-bold text-white mb-4" 
+            style={{ fontFamily: "Georgia, serif" }}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <motion.span
+              animate={{ 
+                textShadow: [
+                  "0 0 20px rgba(59,130,246,0.3)",
+                  "0 0 40px rgba(59,130,246,0.6)",
+                  "0 0 20px rgba(59,130,246,0.3)"
+                ]
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              🏔️ Himalayan Vibe
+            </motion.span>
+          </motion.h1>
+          
+          <motion.p 
+            className="text-white/60 text-lg max-w-2xl mx-auto mb-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            Your verified journey proofs, minted as NFTs on-chain. Each card holds immutable proof of your Himalayan adventure.
+          </motion.p>
+          
+          <motion.button
+            onClick={handleShare}
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-trekker-orange to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-sm font-bold px-6 py-3 rounded-full transition-all shadow-lg shadow-orange-500/30"
+            whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(251, 146, 60, 0.4)" }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            {copied ? (
+              <>
+                <CheckCircle2 className="w-4 h-4" />
+                Link Copied!
+              </>
+            ) : (
+              <>
+                <Share2 className="w-4 h-4" />
+                Share My Vibes
+              </>
+            )}
+          </motion.button>
+        </motion.div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <motion.div 
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, staggerChildren: 0.1 }}
+        >
           <StatBadge value={proofs.length} label="Total Journeys" icon="🗺️" />
           <StatBadge value={proofs.filter(p => !!p.nft_mint_address).length} label="Minted NFTs" icon="🎖️" />
           <StatBadge value={proofs.filter(p => !p.nft_mint_address).length} label="Pending Mint" icon="⏳" />
           <StatBadge value={loaded ? "Live" : "…"} label="Chain Status" icon="⛓️" />
-        </div>
+        </motion.div>
 
         {/* Filter tabs */}
-        <div className="flex gap-2 mb-8 justify-center">
-          {["all", "minted", "pending"].map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
-                filter === f
-                  ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30 scale-105"
-                  : "bg-white/10 text-white/60 hover:bg-white/20 hover:text-white"
+        <motion.div 
+          className="flex gap-3 mb-10 justify-center flex-wrap"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          {[
+            { key: "all", label: "All Proofs", icon: null },
+            { key: "minted", label: "Minted", icon: CheckCircle2 },
+            { key: "pending", label: "Pending", icon: Clock }
+          ].map(({ key, label, icon: Icon }) => (
+            <motion.button
+              key={key}
+              onClick={() => setFilter(key)}
+              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
+                filter === key
+                  ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
+                  : "bg-white/10 text-white/60 hover:bg-white/20 hover:text-white border border-white/10"
               }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              {f === "all" ? "All Proofs" : f === "minted" ? "✅ Minted" : "⏳ Pending"}
-            </button>
+              {Icon && <Icon className="w-4 h-4" />}
+              {label}
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Cards grid */}
-        {!loaded ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-[220px] rounded-2xl bg-white/5 animate-pulse" />
-            ))}
-          </div>
-        ) : displayed.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="text-6xl mb-4">🧗</div>
-            <p className="text-white/50 text-lg">No proofs found for this filter.</p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {displayed.map((proof, i) => (
-              <ProofCard key={proof.id} proof={proof} index={i} />
-            ))}
-          </div>
-        )}
+        <AnimatePresence mode="wait">
+          {!loaded ? (
+            <motion.div 
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              {[...Array(6)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="h-[240px] rounded-3xl bg-white/5 backdrop-blur-sm"
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}
+                />
+              ))}
+            </motion.div>
+          ) : displayed.length === 0 ? (
+            <motion.div 
+              className="text-center py-20"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+            >
+              <motion.div 
+                className="text-7xl mb-4"
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                🧗
+              </motion.div>
+              <p className="text-white/50 text-lg font-semibold">No proofs found for this filter.</p>
+              <p className="text-white/30 text-sm mt-2">Try selecting a different filter above</p>
+            </motion.div>
+          ) : (
+            <motion.div 
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              {displayed.map((proof, i) => (
+                <ProofCard key={proof.id} proof={proof} index={i} />
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Footer hint */}
-        <p className="text-center text-white/30 text-sm mt-12">
+        <motion.p 
+          className="text-center text-white/30 text-sm mt-16 flex items-center justify-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          <Sparkles className="w-4 h-4" />
           Tap any card to reveal on-chain proof data • Powered by Solana
-        </p>
+        </motion.p>
       </div>
-
-      <style jsx>{`
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); opacity: 0.2; }
-          50% { transform: scale(1.15); opacity: 0.35; }
-        }
-      `}</style>
     </main>
   );
 }

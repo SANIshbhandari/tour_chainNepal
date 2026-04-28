@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import {
   ConnectionProvider,
   WalletProvider,
@@ -10,13 +10,11 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 
-// Import the styles manually since we are in a Next.js environment
-import "@solana/wallet-adapter-react-ui/styles.css";
-
 export const SolanaProvider = ({ children }: { children: React.ReactNode }) => {
+  const [mounted, setMounted] = useState(false);
+  
   const cluster = (process.env.NEXT_PUBLIC_SOLANA_CLUSTER ?? "devnet").toLowerCase();
   const network =
     cluster === "mainnet-beta"
@@ -30,14 +28,26 @@ export const SolanaProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const wallets = useMemo(
-    () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
+    () => [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
+    ],
     []
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Don't render wallet providers until mounted on client
+  if (!mounted) {
+    return <>{children}</>;
+  }
 
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>{children}</WalletModalProvider>
+        {children}
       </WalletProvider>
     </ConnectionProvider>
   );

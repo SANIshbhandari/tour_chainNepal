@@ -155,18 +155,18 @@ export default function ExplorePage() {
   }, [routes, searchTerm, region, difficulty]);
 
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(160deg, #f0f4ff 0%, #fef9f0 50%, #f0fff4 100%)" }}>
+    <div className="min-h-screen bg-gradient-to-b from-summit-white via-blue-50/30 to-orange-50/20">
       {/* Hero header */}
       <div className="pt-28 pb-8 px-4 max-w-7xl mx-auto">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 bg-orange-50 border border-orange-200 rounded-full px-4 py-1.5 text-sm text-orange-600 font-medium mb-5">
-            <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-trekker-orange/10 to-orange-600/10 border border-trekker-orange/20 rounded-full px-5 py-2 text-sm text-trekker-orange font-semibold mb-6 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-trekker-orange animate-pulse" />
             {routes.length} Verified Routes Available
           </div>
-          <h1 className="text-6xl font-bold text-gray-900 mb-3" style={{ fontFamily: "Georgia, serif" }}>
-            Discover Your <span className="text-orange-500 italic">Next Route</span>
+          <h1 className="text-5xl md:text-7xl font-playfair font-bold text-himalayan-blue mb-4">
+            Discover Your <span className="bg-gradient-to-r from-trekker-orange to-orange-600 bg-clip-text text-transparent italic">Next Adventure</span>
           </h1>
-          <p className="text-gray-500 text-lg max-w-xl mx-auto">
+          <p className="text-himalayan-blue/70 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
             Explore blockchain-verified Nepal treks. Every route is immutably recorded on Solana.
           </p>
         </div>

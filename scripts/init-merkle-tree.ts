@@ -10,13 +10,27 @@ function getEnv(name: string, fallback?: string): string {
 }
 
 function parseKeypair(): Uint8Array {
-  const keypairPath = getEnv("ANCHOR_WALLET");
-  const abs = resolve(keypairPath);
-  if (!existsSync(abs)) {
-    throw new Error(`ANCHOR_WALLET not found: ${abs}`);
+  // Try multiple paths for the keypair
+  const possiblePaths = [
+    process.env.ANCHOR_WALLET,
+    "/home/sanish/.config/solana/id.json",
+    `${process.env.HOME}/.config/solana/id.json`,
+  ].filter(Boolean) as string[];
+
+  for (const keypairPath of possiblePaths) {
+    try {
+      const abs = resolve(keypairPath);
+      if (existsSync(abs)) {
+        const raw = JSON.parse(readFileSync(abs, "utf8")) as number[];
+        console.log(`Using keypair from: ${abs}`);
+        return new Uint8Array(raw);
+      }
+    } catch (e) {
+      // Try next path
+    }
   }
-  const raw = JSON.parse(readFileSync(abs, "utf8")) as number[];
-  return new Uint8Array(raw);
+
+  throw new Error(`ANCHOR_WALLET not found. Tried: ${possiblePaths.join(", ")}`);
 }
 
 async function run() {
@@ -35,8 +49,10 @@ async function run() {
   const keypair = web3.Keypair.fromSecretKey(secret);
   const connection = new web3.Connection(rpc, "confirmed");
   const balance = await connection.getBalance(keypair.publicKey);
-  if (balance < 2 * web3.LAMPORTS_PER_SOL) {
-    throw new Error("Need at least 2 SOL before tree initialization");
+  const balanceInSol = balance / web3.LAMPORTS_PER_SOL;
+  console.log(`Current balance: ${balanceInSol} SOL`);
+  if (balanceInSol < 2) {
+    throw new Error(`Need at least 2 SOL before tree initialization. Current: ${balanceInSol} SOL`);
   }
 
   const umi = createUmi(rpc).use(mplBubblegum());

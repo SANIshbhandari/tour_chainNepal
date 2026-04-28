@@ -18,20 +18,64 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return jsonError(401, "unauthorized", "Unauthorized");
+    return jsonError(401, "unauthorized", "You must be logged in to mint a proof");
   }
 
-  const { data: profile } = await supabase.from("users").select("role").eq("id", user.id).maybeSingle();
-  if (profile?.role !== "admin") {
-    return jsonError(403, "forbidden", "Admin only");
+  // Verify the booking belongs to the user
+  const { data: booking, error: bookingError } = await supabase
+    .from("bookings")
+    .select("id, tourist_id, route_id, status")
+    .eq("id", body.bookingId)
+    .single();
+
+  if (bookingError || !booking) {
+    return jsonError(404, "not_found", "Booking not found");
   }
 
-  const fakeMintAddress = `pending-${Date.now()}`;
+  if (booking.tourist_id !== user.id) {
+    return jsonError(403, "forbidden", "This booking does not belong to you");
+  }
+
+  // Check if all checkpoints are completed
+  if (booking.route_id) {
+    const { data: checkpoints } = await supabase
+      .from("route_checkpoints")
+      .select("place_id")
+      .eq("route_id", booking.route_id);
+
+    const { data: checkins } = await supabase
+      .from("check_ins")
+      .select("place_id")
+      .eq("booking_id", body.bookingId)
+      .eq("verified", true);
+
+    const totalCheckpoints = checkpoints?.length || 0;
+    const completedCheckpoints = checkins?.length || 0;
+
+    if (totalCheckpoints > 0 && completedCheckpoints < totalCheckpoints) {
+      return jsonError(400, "incomplete_trek", `You must complete all checkpoints first (${completedCheckpoints}/${totalCheckpoints})`);
+    }
+  }
+
+  // Check if proof already exists
+  const { data: existingProof } = await supabase
+    .from("completion_proofs")
+    .select("id")
+    .eq("booking_id", body.bookingId)
+    .maybeSingle();
+
+  if (existingProof) {
+    return jsonError(400, "already_minted", "Completion proof already exists for this booking");
+  }
+
+  // Create the proof (in production, this would mint an actual NFT on Solana)
+  const fakeMintAddress = `PROOF${Date.now()}${Math.random().toString(36).substring(7)}`;
   const { data, error } = await supabase
     .from("completion_proofs")
     .insert({
       booking_id: body.bookingId,
       user_id: user.id,
+      route_id: booking.route_id,
       nft_mint_address: fakeMintAddress,
       metadata_uri: body.uri,
     })
@@ -42,5 +86,11 @@ export async function POST(request: Request) {
     return jsonError(500, "db_error", error.message);
   }
 
-  return jsonOk({ proof: data });
+  // Update booking status to completed
+  await supabase
+    .from("bookings")
+    .update({ status: "completed" })
+    .eq("id", body.bookingId);
+
+  return jsonOk({ proof: data }, { status: 201 });
 }

@@ -1,0 +1,279 @@
+{
+  "address": "3PfgspqxmvAh3FXUMGRPexBV7neXwLkKTPnv3gRWvPjm",
+  "metadata": {
+    "name": "tourchain_proof",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "initialize_proof_authority",
+      "discriminator": [
+        64,
+        199,
+        47,
+        226,
+        250,
+        98,
+        46,
+        148
+      ],
+      "accounts": [
+        {
+          "name": "proof_authority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  111,
+                  102,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "merkle_tree",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "mint_completion_proof",
+      "discriminator": [
+        225,
+        12,
+        193,
+        232,
+        52,
+        227,
+        116,
+        106
+      ],
+      "accounts": [
+        {
+          "name": "proof_authority",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  111,
+                  102,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "recipient"
+        },
+        {
+          "name": "tree_config",
+          "writable": true
+        },
+        {
+          "name": "merkle_tree",
+          "writable": true
+        },
+        {
+          "name": "bubblegum_program"
+        },
+        {
+          "name": "compression_program"
+        },
+        {
+          "name": "log_wrapper"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "ProofAuthority",
+      "discriminator": [
+        221,
+        137,
+        119,
+        105,
+        165,
+        249,
+        26,
+        162
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "CompletionProofMinted",
+      "discriminator": [
+        210,
+        3,
+        185,
+        8,
+        46,
+        172,
+        32,
+        196
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "UnauthorizedAdmin",
+      "msg": "Unauthorized admin"
+    },
+    {
+      "code": 6001,
+      "name": "NameTooLong",
+      "msg": "Name too long"
+    },
+    {
+      "code": 6002,
+      "name": "SymbolTooLong",
+      "msg": "Symbol too long"
+    },
+    {
+      "code": 6003,
+      "name": "UriTooLong",
+      "msg": "URI too long"
+    },
+    {
+      "code": 6004,
+      "name": "TreeNotInitialized",
+      "msg": "Merkle tree not initialized"
+    },
+    {
+      "code": 6005,
+      "name": "Overflow",
+      "msg": "Arithmetic overflow"
+    }
+  ],
+  "types": [
+    {
+      "name": "CompletionProofMinted",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "recipient",
+            "type": "pubkey"
+          },
+          {
+            "name": "merkle_tree",
+            "type": "pubkey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "total_minted",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProofAuthority",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "merkle_tree",
+            "type": "pubkey"
+          },
+          {
+            "name": "total_minted",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}
