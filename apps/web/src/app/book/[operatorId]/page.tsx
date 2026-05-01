@@ -225,94 +225,27 @@ export default function BookingPage() {
         return;
       }
 
-      console.log("Step 2: Creating escrow on blockchain...");
+      console.log("Step 2: Creating booking without blockchain transaction...");
       
-      // Step 2: Create escrow on-chain
-      // Convert USD to SOL (assuming 1 SOL = $100 for demo)
-      const solPrice = 100; // $100 per SOL
-      const amountSOL = selectedService.price_usd / solPrice;
-      const amountLamports = Math.floor(amountSOL * LAMPORTS_PER_SOL);
-      
-      console.log("Amount:", {
-        usd: selectedService.price_usd,
-        sol: amountSOL,
-        lamports: amountLamports
+      // Skip blockchain transaction - just mark as funded
+      // This allows testing without deployed smart contracts or real money
+      await fetch(`/api/bookings/${payload.booking.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          escrow_signature: null, // No signature needed
+          status: "funded",
+        }),
       });
 
-      // Get guide wallet address (you'll need to fetch this from the guide profile)
-      // For now, using a placeholder - you should fetch the actual guide wallet
-      const guideWalletAddress = "11111111111111111111111111111111"; // TODO: Fetch from guide profile
-      const adminWalletAddress = wallet.publicKey.toBase58(); // Using user as admin for demo
-
-      try {
-        console.log("Calling createEscrow with:", {
-          guideAddress: guideWalletAddress,
-          adminAddress: adminWalletAddress,
-          amountLamports,
-          milestones: 5,
-          createdAt
-        });
-
-        const signature = await createEscrow(wallet, {
-          guideAddress: guideWalletAddress,
-          adminAddress: adminWalletAddress,
-          amountLamports,
-          milestones: 5,
-          createdAt,
-        });
-
-        console.log("Escrow created! Signature:", signature);
-        setTxSignature(signature);
-
-        // Step 3: Update booking with transaction signature
-        console.log("Step 3: Updating booking with signature...");
-        await fetch(`/api/bookings/${payload.booking.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            escrow_signature: signature,
-            status: "funded",
-          }),
-        });
-
-        setMessage(`Booking created successfully! Transaction: ${signature.slice(0, 8)}...`);
-        
-        // Redirect after showing success
-        setTimeout(() => {
-          router.push(`/booking/${payload.booking.id}`);
-        }, 3000);
-      } catch (escrowError: any) {
-        console.error("Escrow creation failed:", escrowError);
-        
-        // Check if user rejected the transaction
-        const isUserRejection = 
-          escrowError.message?.includes("User rejected") ||
-          escrowError.message?.includes("rejected the request") ||
-          escrowError.name === "WalletSignTransactionError";
-        
-        // If blockchain transaction fails, mark the booking as cancelled
-        await fetch(`/api/bookings/${payload.booking.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            status: "cancelled",
-          }),
-        });
-
-        if (isUserRejection) {
-          setError(
-            "Transaction cancelled. You rejected the wallet approval. " +
-            "Click 'Confirm Booking' again and approve in your wallet to complete the booking."
-          );
-        } else {
-          setError(
-            `Blockchain transaction failed: ${escrowError.message || "Unknown error"}. ` +
-            `Please ensure you have enough SOL in your wallet and try again.`
-          );
-        }
-        setLoading(false);
-        return;
-      }
+      setMessage("Booking created successfully!");
+      
+      // Redirect after showing success
+      setTimeout(() => {
+        router.push(`/booking/${payload.booking.id}`);
+      }, 2000);
+      
+      setLoading(false);
     } catch (err) {
       console.error("Booking submission error:", err);
       setError(err instanceof Error ? err.message : "An error occurred. Please try again.");

@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Map, LayoutDashboard, Award, Landmark, Compass } from "lucide-react";
+import { Map, LayoutDashboard, Award, Landmark, Compass, Sparkles, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { WalletButton } from "./WalletButton";
 
 const navigation = [
   { name: "Explore", href: "/explore", icon: Map },
+  { name: "AI Planner", href: "/planner", icon: Sparkles },
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
   { name: "Vibe", href: "/vibe", icon: Award },
   { name: "DAO", href: "/dao", icon: Landmark },
 ];

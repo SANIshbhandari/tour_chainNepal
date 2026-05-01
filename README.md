@@ -1,4 +1,4 @@
-# TourChain - Web3 Tourism Platform 🏔️
+use # TourChain - Web3 Tourism Platform 🏔️
 
 Blockchain-powered tourism platform for Nepal built on Solana.
 
